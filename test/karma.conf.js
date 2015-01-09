@@ -15,7 +15,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-        'test/karma.app-config-wrapper.js',
+        'app/shared/app-config.js',
       'app/deploy/assets/scripts/angular/angular.js',
       'app/deploy/assets/scripts/angular-ui-router/release/angular-ui-router.js',
       'app/deploy/assets/scripts/angular-mocks/angular-mocks.js',

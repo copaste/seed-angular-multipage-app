@@ -1,5 +1,4 @@
 var config = require('./deploy-config.json');
-var appConfig = require('./app-config.json');
 var rollbar = require('./rollbar');
 
 function dateStamp(){
@@ -43,7 +42,6 @@ module.exports = function(grunt) {
                     'replace:indexCSS',
                     'replace:loginHTML',
                     'replace:indexHTML',
-                    'replace:testSettings',
                     'shell:multiBrowserify'
                     ]
             }
@@ -200,16 +198,6 @@ module.exports = function(grunt) {
                     from: '"apiHost": "http://localhost:3333/"',
                     to: function(){return '"apiHost": "' + config.environment[env].apiHost + '/"'}
                 }]
-            },
-
-            testSettings : {
-                src: ['test/karma.app-config-wrapper.js'],
-                overwrite: true,
-                replacements: [{
-                    from: /(.*)/,
-                    to: 'var karmaSettings = ' + JSON.stringify(appConfig) + ';'
-                }]
-
             }
         }
 

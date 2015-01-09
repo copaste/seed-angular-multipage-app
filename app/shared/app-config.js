@@ -1,4 +1,5 @@
-{
+var _APP_CONFIG = {
+
     "apiHost": "http://localhost:3333/",
 
     "apiRoutes": {
@@ -6,4 +7,4 @@
       "authenticateToken": "api/authenticate-token"
     }
 
-}
+};
