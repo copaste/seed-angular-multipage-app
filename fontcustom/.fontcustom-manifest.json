@@ -1,0 +1,50 @@
+{
+  "checksum": {
+    "previous": "fbbd7b3823e479c03d2e0deee258deb2ca2e614ae8ba73626117d72c7bf33e63",
+    "current": "fbbd7b3823e479c03d2e0deee258deb2ca2e614ae8ba73626117d72c7bf33e63"
+  },
+  "fonts": [
+    "../app/deploy/assets/fonts/fontcustom_fbbd7b3823e479c03d2e0deee258deb2.ttf",
+    "../app/deploy/assets/fonts/fontcustom_fbbd7b3823e479c03d2e0deee258deb2.svg",
+    "../app/deploy/assets/fonts/fontcustom_fbbd7b3823e479c03d2e0deee258deb2.woff",
+    "../app/deploy/assets/fonts/fontcustom_fbbd7b3823e479c03d2e0deee258deb2.eot"
+  ],
+  "glyphs": {
+    "circle-check": {
+      "codepoint": 61744,
+      "source": "./svgs/circle-check.svg"
+    },
+    "triangle-exclaim": {
+      "codepoint": 61745,
+      "source": "./svgs/triangle-exclaim.svg"
+    }
+  },
+  "options": {
+    "autowidth": false,
+    "config": "fontcustom.yml",
+    "css_selector": ".icon-{{glyph}}",
+    "debug": false,
+    "font_name": "fontcustom",
+    "force": false,
+    "input": {
+      "templates": "./svgs",
+      "vectors": "./svgs"
+    },
+    "no_hash": false,
+    "output": {
+      "css": "../app/shared/less",
+      "fonts": "../app/deploy/assets/fonts",
+      "preview": "./styleguide"
+    },
+    "preprocessor_path": "",
+    "quiet": false,
+    "templates": [
+      "css",
+      "preview"
+    ]
+  },
+  "templates": [
+    "../app/shared/less/fontcustom.css",
+    "./styleguide/fontcustom-preview.html"
+  ]
+}

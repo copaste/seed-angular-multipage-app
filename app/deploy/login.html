@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <!-- BOOTSTRAP CSS-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <!-- APP CSS -->
+    <link rel="stylesheet" href="assets/styles/login.css">
+
+    <!-- Rollbar -->
+
+</head>
+<body ng-app="loginPage" ng-controller="LoginPageController">
+
+<form name="loginForm" ng-submit="loginFormCtrl.submitCreds()" class="form-signin" role="form" ng-controller="LoginFormController as loginFormCtrl" novalidate>
+
+    <h2 class="form-signin-heading">Please sign in</h2>
+
+    <input type="text"
+           class="form-control ng-pristine ng-invalid"
+           placeholder="Username"
+           ng-model="loginFormCtrl.user.username"
+           name="username"
+           required
+           autofocus="">
+
+    <div class="help-hint"><span class="help" ng-show="loginForm.username.$error.required">*Required</span></div>
+
+    <input type="password"
+           class="form-control ng-pristine ng-invalid"
+           placeholder="Password"
+           ng-model="loginFormCtrl.user.password"
+           name="password"
+           required>
+
+    <div class="help-hint password-hint">
+        <span class="help" ng-show="loginForm.password.$error.required">*Required</span>
+        <span class="help" ng-show="loginFormCtrl.badCredentials">Username or password in incorrect.</span>
+    </div>
+
+    <input id="redirectHash" type="hidden" class="form-control" placeholder="User name" name="redirectHash">
+
+    <input type="submit"
+            value="Sign in"
+            ng-disabled="loginForm.$invalid"
+            class="btn btn-lg btn-primary btn-block">
+
+
+</form>
+
+
+<!-- ANGULAR JS-->
+<script src="assets/scripts/angular/angular.min.js"></script>
+
+
+
+<!-- APP JS -->
+<script src="assets/scripts/login.js"></script>
+
+</body>
+</html>
