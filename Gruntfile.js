@@ -1,5 +1,5 @@
 var config = require('./deploy-config.json');
-var rollbar = require('./rollbar');
+//var rollbar = require('./rollbar');
 
 function dateStamp(){
     return new Date().getTime();
@@ -168,10 +168,10 @@ module.exports = function(grunt) {
                         from: 'href="assets/styles/index.css"',
                         to: function(){return 'href="assets/styles/index.css?' + dateStamp() +'"'}
                     },
-                    {
+                  /*  {
                         from: '<!-- Rollbar -->',
                         to: function(){return rollbar();}
-                    }]
+                    }*/]
             },
 
             loginCSS: {
