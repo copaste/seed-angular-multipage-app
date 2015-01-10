@@ -10,11 +10,13 @@
       "apiHost": "http://localhost:3333"
     },
     "production": {
-      "apiHost": "http://guard-duty-api.spatialdevmo.com",
-      "hostIp": "54.83.188.204",
-      "hostPath":"guard-duty/browser",
-      "hostUsername":"ubuntu",
-      "pemFilePath": "/Users/rgwozdz/Documents/PemFiles/spatialdev.pem"
-    }
+      "apiHost": "",
+      "hostIp": "",
+      "hostPath":"",
+      "hostUsername":"",
+      "pemFilePath": ""
+    },
+
+    "rollbarKey": ""
   }
 }
