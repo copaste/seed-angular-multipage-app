@@ -1,5 +1,5 @@
 var config = require('./deploy-config.json');
-var rollbar = require('./rollbar');
+//var rollbar = require('./rollbar');
 
 function dateStamp(){
     return new Date().getTime();
@@ -33,7 +33,7 @@ module.exports = function(grunt) {
                     spawn: false
                 },
                 // Files to watch for changes
-                files: ['app/**', '!app/deploy/**'],
+                files: ['app/**', 'app/deploy/**'],
 
                 tasks: [
                     'less:indexStyles',
@@ -157,11 +157,11 @@ module.exports = function(grunt) {
             },
 
             indexHTML : {
-                src: ['build/deploy/index.html'],
+                src: ['app/deploy/index.html','build/deploy/index.html'],
                 overwrite: true,
                 replacements: [
                     {
-                        from: 'src="assets/scripts/index.js"',
+                        from: /src="assets\/scripts\/index.js=\?([0-9]+)/g,
                         to: function(){return 'src="assets/scripts/index.js?' + dateStamp() +'"'}
                     },
                     {

@@ -1,4 +1,4 @@
-var _APP_CONFIG = {
+ _APP_CONFIG = {
 
     "apiHost": "http://localhost:3333/",
 
@@ -8,3 +8,4 @@ var _APP_CONFIG = {
     }
 
 };
+

@@ -21,7 +21,6 @@ app.controller('IndexPageController', ['$scope', '$http', '$q','AuthUtils', 'set
 
 }]);
 
-
 app.controller('SuitesDashboardController', ['$scope', '$http', '$q', 'settings', function($scope, $http, $q, settings){
 
     var self = this;
