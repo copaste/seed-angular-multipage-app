@@ -1,20 +1,2 @@
-/* Source: fonts.scss */
 
-@font-face {
-    font-family: 'Futura Condensed';
-    src: url('../fonts/futura-condensed-webfont.woff') format('woff'),
-    url('../../deploy/assets/fonts/futura-condensed-webfont.ttf') format('truetype');
-}
-@font-face {
-    font-family: 'Futura Condensed Bold';
-    src: url('../fonts/futura-condensedbold-webfont.woff') format('woff'),
-    url('../../deploy/assets/fonts/futura-condensedbold-webfont.ttf') format('truetype');
-}
-@font-face {
-    font-family: 'Fira Sans';
-    src: url('../fonts/FiraSansOT-Regular.otf');
-}
-@font-face {
-    font-family: 'Fira Sans Italic';
-    src: url('../fonts/FiraSansOT-RegularItalic.otf');
-}
+

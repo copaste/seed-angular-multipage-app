@@ -1,5 +1,5 @@
 var config = require('./deploy-config.json');
-var rollbar = require('./rollbar')(config);
+var rollbar = require('./rollbar');
 
 function dateStamp(){
     return new Date().getTime();
@@ -17,6 +17,8 @@ module.exports = function(grunt) {
 
         console.log('scp -i ' + pem + ' ship/build.tar.gz '+ hostUser + '@' + hostIp + ':'+ hostPath);
     }
+
+    console.log(config);
 
     // 1. All configuration goes here
     grunt.initConfig({
@@ -152,7 +154,7 @@ module.exports = function(grunt) {
                     },
                     {
                         from: '<!-- Rollbar -->',
-                        to: function(){return rollbar();}
+                        to: function(){return rollbar(config.rollbarKey);}
                     }]
             },
 
@@ -170,7 +172,7 @@ module.exports = function(grunt) {
                     },
                     {
                         from: '<!-- Rollbar -->',
-                        to: function(){return rollbar();}
+                        to: function(){return rollbar(config.rollbarKey);}
                     }]
             },
 

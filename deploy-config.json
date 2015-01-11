@@ -15,8 +15,9 @@
       "hostPath":"",
       "hostUsername":"",
       "pemFilePath": ""
-    },
+    }
 
-    "rollbarKey": ""
-  }
+  },
+  "rollbarKey": "test"
+
 }

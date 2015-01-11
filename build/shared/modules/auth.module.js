@@ -2,11 +2,12 @@
  * Created by rgwozdz on 12/3/14.
  */
 
+
 // Create the authentication module
 var auth = angular.module('App.Auth', ['App.Settings']);
 
 auth.config(['$httpProvider', function($httpProvider) {
-    $httpProvider.interceptors.push(function($q, $location, $window) {
+    $httpProvider.interceptors.push(function($q, $location, $window, settings) {
         return {
 
             request: function(config) {
@@ -54,13 +55,13 @@ auth.config(['$httpProvider', function($httpProvider) {
                         // Delete userToken from localStorage
                         delete $window.localStorage.userToken;
 
-                        var loc =  $window.location.href;;
+                        var loc =  $window.location.href;
 
                         // redirect to login page if not already there
-                        if (loc.indexOf('login.html') === -1) {
+                        if (loc.indexOf(settings.loginPage) === -1) {
 
                             // redirect to login
-                            $window.location = 'login.html';
+                            $window.location = settings.loginPage;
                         }
 
                         break;
@@ -85,20 +86,20 @@ auth.factory('AuthUtils', ['$q', '$http', '$window', '$location','settings', fun
 
             return;
 
-        } else if (userToken === null && loc.indexOf('login.html') === -1) {
+        } else if (userToken === null && loc.indexOf(settings.loginPage) === -1) {
 
-            $window.location.href = 'login.html';
+            $window.location.href = settings.loginPage;
             return;
 
-        } else if (userToken === null && loc.indexOf('login.html') > -1) {
+        } else if (userToken === null && loc.indexOf(settings.loginPage) > -1) {
 
             return;
 
         } else if (userToken === null) {
 
             // Redirect to login page unless they are already on it; this prob not necessary, but just in case for now
-            if (loc.indexOf('login.html') === -1) {
-                $window.location.href = 'login.html';
+            if (loc.indexOf(settings.loginPage) === -1) {
+                $window.location.href = settings.loginPage;
             }
 
             // No token and already on the login page
@@ -150,10 +151,10 @@ auth.factory('AuthUtils', ['$q', '$http', '$window', '$location','settings', fun
         var loc = $window.location.href;
 
         // redirect to login page if not already there
-        if (loc.indexOf('login.html') === -1) {
+        if (loc.indexOf(settings.loginPage) === -1) {
 
             // redirect to login
-            $window.location.href = 'login.html';
+            $window.location.href = settings.loginPage;
         }
 
         return;
@@ -168,7 +169,6 @@ auth.factory('AuthUtils', ['$q', '$http', '$window', '$location','settings', fun
     };
 
 }]);
-
 
 // Controller for logout DOM event
 auth.controller('LogoutController', ['$scope', 'AuthUtils',function($scope, AuthUtils) {

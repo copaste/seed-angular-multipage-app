@@ -79,10 +79,10 @@ var getGoNoGoResults  = function($q, $http, settings){
 require('../../shared/app-config.js');
 require('../../shared/modules/auth.module.js');
 require('../../shared/modules/settings.module.js');
-require('./index.module.js');
+require('./home.module.js');
 
 
-},{"../../shared/app-config.js":3,"../../shared/modules/auth.module.js":4,"../../shared/modules/settings.module.js":5,"./index.module.js":1}],3:[function(require,module,exports){
+},{"../../shared/app-config.js":3,"../../shared/modules/auth.module.js":4,"../../shared/modules/settings.module.js":5,"./home.module.js":1}],3:[function(require,module,exports){
  _APP_CONFIG = {
 
     "apiHost": "http://localhost:3333/",
@@ -92,10 +92,11 @@ require('./index.module.js');
       "authenticateToken": "api/authenticate-token"
     },
 
-     "loginPage": "login.html",
-     "homePage": "index.html"
+     "loginPage": "index.html",
+     "homePage": "home.html"
 
 };
+
 
 },{}],4:[function(require,module,exports){
 /**
@@ -301,4 +302,4 @@ applicationSettings.constant('settings', settings);
 },{}]},{},[2])
 
 
-//# sourceMappingURL=index.js.map?1420960224
+//# sourceMappingURL=home.js.map?1420957498

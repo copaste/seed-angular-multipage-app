@@ -2,19 +2,7 @@
  * Created by rgwozdz on 12/8/14.
  */
 
-
-var settings = {
-
-    "apiHost": "http://guard-duty-api.spatialdevmo.com/",
-
-
-    "apiRoutes": {
-        "authenticate": "authenticate",
-        "authenticateToken": "api/authenticate-token",
-        "goNoGo" :"api/test-suites-overview"
-    }
-
-};
+var settings = _APP_CONFIG;
 
 // Build complete API routes (host + route);
 for (var key in settings.apiRoutes) {
