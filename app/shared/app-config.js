@@ -7,8 +7,7 @@
       "authenticateToken": "api/authenticate-token"
     },
 
-     "loginPage": "index.html",
-     "homePage": "home.html"
+     "loginPage": "login.html",
+     "homePage": "index.html"
 
 };
-

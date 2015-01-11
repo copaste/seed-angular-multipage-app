@@ -71,11 +71,10 @@ require('./login.module.js');
       "authenticateToken": "api/authenticate-token"
     },
 
-     "loginPage": "index.html",
-     "homePage": "home.html"
+     "loginPage": "login.html",
+     "homePage": "index.html"
 
 };
-
 
 },{}],4:[function(require,module,exports){
 /**
@@ -281,4 +280,4 @@ applicationSettings.constant('settings', settings);
 },{}]},{},[2])
 
 
-//# sourceMappingURL=login.js.map?1420957499
+//# sourceMappingURL=login.js.map?1420958409
