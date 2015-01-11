@@ -35,7 +35,7 @@ app.controller('LoginFormController', ['$scope', '$http', '$window', 'settings',
 
                 if(message === 'authenticated'){
 
-                    $window.location.href = 'index.html';
+                    $window.location.href = settings.homePage;
 
                 } else {
                     controllerContext.badCredentials = true;

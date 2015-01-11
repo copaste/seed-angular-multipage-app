@@ -39,9 +39,9 @@ module.exports = function(grunt) {
                     'less:indexStyles',
                     'less:loginStyles',
                     'replace:loginCSS',
-                    'replace:indexCSS',
+                    'replace:homeCSS',
                     'replace:loginHTML',
-                    'replace:indexHTML',
+                    'replace:homeHTML',
                     'shell:multiBrowserify'
                     ]
             }
@@ -94,14 +94,15 @@ module.exports = function(grunt) {
             // Add cache busting querying string to source mapping URL
             multiBrowserify: {
                 command: [
-                    'browserify app/pages/index/index.require.js --debug | exorcist app/deploy/assets/scripts/index.js.map > app/deploy/assets/scripts/index.js',
-                    'echo "?"`date +%s` >>  app/deploy/assets/scripts/index.js',
+                    'browserify app/pages/home/home.require.js --debug | exorcist app/deploy/assets/scripts/home.js.map > app/deploy/assets/scripts/home.js',
+                    'echo "?"`date +%s` >>  app/deploy/assets/scripts/home.js',
 
                     'browserify app/pages/login/login.require.js --debug | exorcist app/deploy/assets/scripts/login.js.map > app/deploy/assets/scripts/login.js',
                     'echo "?"`date +%s` >>  app/deploy/assets/scripts/login.js',
 
 
                 ].join('&&')
+
             },
 
             multiBrowserifyBuild: {
@@ -139,7 +140,7 @@ module.exports = function(grunt) {
 
         replace: {
             loginHTML : {
-                src: ['build/deploy/login.html'],
+                src: ['build/deploy/index.html'],
                 overwrite: true,
                 replacements: [
                     {
@@ -156,17 +157,17 @@ module.exports = function(grunt) {
                     }]
             },
 
-            indexHTML : {
-                src: ['app/deploy/index.html','build/deploy/index.html'],
+            homeHTML : {
+                src: ['build/deploy/home.html'],
                 overwrite: true,
                 replacements: [
                     {
-                        from: /src="assets\/scripts\/index.js=\?([0-9]+)/g,
-                        to: function(){return 'src="assets/scripts/index.js?' + dateStamp() +'"'}
+                        from: 'src="assets/scripts/home.js"',
+                        to: function(){return 'src="assets/scripts/home.js?' + dateStamp() +'"'}
                     },
                     {
-                        from: 'href="assets/styles/index.css"',
-                        to: function(){return 'href="assets/styles/index.css?' + dateStamp() +'"'}
+                        from: 'href="assets/styles/home.css"',
+                        to: function(){return 'href="assets/styles/home.css?' + dateStamp() +'"'}
                     },
                     {
                         from: '<!-- Rollbar -->',
@@ -182,12 +183,12 @@ module.exports = function(grunt) {
                     to: 'sourceMappingURL=login.css.map'
                 }]
             },
-            indexCSS: {
-                src: ['app/deploy/assets/styles/index.css','build/deploy/assets/styles/index.css'],
+            homeCSS: {
+                src: ['app/deploy/assets/styles/home.css','build/deploy/assets/styles/home.css'],
                 overwrite: true,
                 replacements: [{
-                    from: 'sourceMappingURL=app/deploy/assets/styles/index.css.map',
-                    to: 'sourceMappingURL=index.css.map'
+                    from: 'sourceMappingURL=app/deploy/assets/styles/home.css.map',
+                    to: 'sourceMappingURL=home.css.map'
                 }]
             },
 
@@ -216,7 +217,7 @@ module.exports = function(grunt) {
     grunt.registerTask('build', [
         'clean:build',
         'copy:build',
-        'replace:loginHTML', 'replace:indexHTML', 'replace:loginCSS', 'replace:indexCSS','replace:settings',
+        'replace:loginHTML', 'replace:homeHTML', 'replace:loginCSS', 'replace:homeCSS','replace:settings',
         'shell:multiBrowserifyBuild'
     ]);
 
@@ -224,7 +225,7 @@ module.exports = function(grunt) {
     grunt.registerTask('build-push', [
         'clean:build',
         'copy:build',
-        'replace:loginHTML', 'replace:indexHTML', 'replace:loginCSS', 'replace:indexCSS','replace:settings',
+        'replace:loginHTML', 'replace:homeHTML', 'replace:loginCSS', 'replace:homeCSS','replace:settings',
         'shell:multiBrowserifyBuild',
         'shell:compress', 'shell:scp'
     ]);

@@ -5,7 +5,10 @@
     "apiRoutes": {
       "authenticate": "authenticate",
       "authenticateToken": "api/authenticate-token"
-    }
+    },
+
+     "loginPage": "index.html",
+     "homePage": "home.html"
 
 };
 

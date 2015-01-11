@@ -1,67 +1,88 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var app = angular.module('loginPage',  ['App.Auth', 'App.Settings']);
 
-app.controller('LoginPageController', ['$scope', '$http', '$q','AuthUtils', function($scope, $http, $q,
-                                                                                        AuthUtils){
+
+var app = angular.module('indexPage',  ['App.Auth', 'App.Settings']);
+
+app.controller('IndexPageController', ['$scope', '$http', '$q','AuthUtils', 'settings', function($scope, $http, $q,
+                                                                                        AuthUtils, settings){
+
     AuthUtils.checkForToken();
-
     AuthUtils.checkTokenValidity()
-    .then(function (response) {
-        // Token is valid; they can stay on this page.
-        return;
-    }, function (err) {
+        .then(function (response) {
 
-           AuthUtils.logout();
-    });
+            // Token is valid; they can stay on this page;
+            return;
+        })
+        .catch(function (err) {
+
+            AuthUtils.logout();
+        });
+
+    console.log('Index Fired');
 
 }]);
 
-// Handle login event
-app.controller('LoginFormController', ['$scope', '$http', '$window', 'settings', function($scope, $http, $window, settings) {
-
-    var controllerContext = this;
-
-    controllerContext.user = {username: null, password: null};
-
-    controllerContext.submitCreds = function(){
-
-        controllerContext.badCredentials = false;
-
-            // Authenticate creds
-            var responsePromise = $http.post(settings.apiRoutes.authenticate, controllerContext.user);
-
-            responsePromise.success(function(res, status, headers, config) {
-
-                var message = res.message || null;
-
-                if(message === 'authenticated'){
-
-                    $window.location.href = settings.homePage;
-
-                } else {
-                    controllerContext.badCredentials = true;
-                }
-            });
-
-            responsePromise.error(function(res, status, headers, config) {
-                controllerContext.badCredentials = true;
-            });
-
-    };
+app.controller('SuitesDashboardController', ['$scope', '$http', '$q', 'settings', function($scope, $http, $q, settings){
 
     var self = this;
-    self.submit = function () {
-        console.log('User clicked submit with ', self.user);
+
+    self.suites = [];
+
+    getGoNoGoResults($q, $http, settings)
+        .then(function(response){
+
+            self.suites = response;
+        })
+        .catch(function(err){
+            console.log(err);
+        });
+
+    self.getStatusClass = function(status){
+        return {
+            passed : status,
+            failed: !status
+        };
     };
 }]);
 
-},{}],2:[function(require,module,exports){
-require('./../../shared/app-config.js');
-require('./../../shared/modules/auth.module.js');
-require('./../../shared/modules/settings.module.js');
-require('./login.module.js');
 
-},{"./../../shared/app-config.js":3,"./../../shared/modules/auth.module.js":4,"./../../shared/modules/settings.module.js":5,"./login.module.js":1}],3:[function(require,module,exports){
+var getGoNoGoResults  = function($q, $http, settings){
+
+
+    var deferred = $q.defer();
+
+    var responsePromise = $http.get(settings.apiRoutes.goNoGo);
+
+    responsePromise.success(function(res, status, headers, config) {
+
+        // if the token is valid, response will contain {authenticated: true}
+        if(res.hasOwnProperty('suites')){
+
+            deferred.resolve(res.suites);
+
+        } else {
+
+            deferred.reject(false);
+        }
+
+    });
+
+    responsePromise.error(function(res, status, headers, config) {
+        deferred.reject(false);
+    });
+
+    return deferred.promise;
+
+};
+
+},{}],2:[function(require,module,exports){
+require('../../shared/app-config.js');
+require('../../shared/modules/auth.module.js');
+require('../../shared/modules/settings.module.js');
+require('./home.module.js');
+
+
+},{"../../shared/app-config.js":3,"../../shared/modules/auth.module.js":4,"../../shared/modules/settings.module.js":5,"./home.module.js":1}],3:[function(require,module,exports){
  _APP_CONFIG = {
 
     "apiHost": "http://localhost:3333/",
@@ -281,4 +302,4 @@ applicationSettings.constant('settings', settings);
 },{}]},{},[2])
 
 
-//# sourceMappingURL=login.js.map?1420957499
+//# sourceMappingURL=home.js.map?1420957498

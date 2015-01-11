@@ -21,29 +21,29 @@ describe('AuthUtils Service ->', function() {
         }));
 
 
-        it('should set location to login.html', inject(function (AuthUtils) {
+        it('should set location to ' + _APP_CONFIG.loginPage, inject(function (AuthUtils) {
 
             //Mock the window object with necessary properties
             $window.localStorage.userToken;
-            $window.location.href = "index.html";
+            $window.location.href = _APP_CONFIG.homePage;
 
             AuthUtils.checkForToken();
 
-            expect($window.location.href).toContain('login.html');
+            expect($window.location.href).toContain(_APP_CONFIG.loginPage);
 
         }));
 
 
-        it('should allow location to remain as index.html', inject(function(AuthUtils) {
+        it('should allow location to remain as ' + _APP_CONFIG.homePage, inject(function(AuthUtils) {
 
             //Mock the window object with necessary properties
             $window.localStorage.userToken = 'ABCDEFG';
 
-            $window.location.href = 'index.html';
+            $window.location.href = _APP_CONFIG.homePage;
 
             AuthUtils.checkForToken();
 
-            expect($window.location.href).toContain('index.html');
+            expect($window.location.href).toContain(_APP_CONFIG.homePage);
 
         }));
 
@@ -72,7 +72,7 @@ describe('AuthUtils Service ->', function() {
 
         it('should validate token', inject(function(AuthUtils) {
 
-            $window.location.href = 'index.html';
+            $window.location.href = _APP_CONFIG.homePage;
 
             AuthUtils.checkTokenValidity()
                 .then(function(response){
@@ -106,15 +106,15 @@ describe('AuthUtils Service ->', function() {
         }));
 
 
-        it('should set location to login.html and set localStorage.userToken to undefined', inject(function(AuthUtils) {
+        it('should set location to ' + _APP_CONFIG.loginPage+ ' and set localStorage.userToken to undefined', inject(function(AuthUtils) {
 
             //Mock the window object with necessary properties
             $window.localStorage.userToken = 'ABCDEFG';
-            $window.location.href = 'index.html';
+            $window.location.href = _APP_CONFIG.homePage;
 
             AuthUtils.logout();
 
-            expect($window.location.href).toContain('login.html');
+            expect($window.location.href).toContain(_APP_CONFIG.loginPage);
             expect($window.localStorage.userToken).toBeUndefined();
 
         }));

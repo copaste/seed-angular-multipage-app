@@ -2,36 +2,61 @@
 <html>
 <head>
     <meta charset="utf-8">
-
+    <title></title>
     <!-- BOOTSTRAP CSS-->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <!-- APP CSS -->
+    <link rel="stylesheet" href="assets/styles/login.css">
 
-
-
-    <title></title>
-    <meta property="og:title" content="SpatialDev">
-    <link rel="stylesheet" href="assets/styles/index.css?1420872298130">
-
-    <script>var _rollbarConfig={accessToken:"015fbe5230044e02b90245b621fcd780",captureUncaught:true,payload:{environment:"production"}};!function(e,t){function n(t){this.shimId=++u,this.notifier=null,this.parentShim=t,this.logger=function(){},e.console&&void 0===e.console.shimId&&(this.logger=e.console.log)}function r(t,n,r){e._rollbarWrappedError&&(r[4]||(r[4]=e._rollbarWrappedError),r[5]||(r[5]=e._rollbarWrappedError._rollbarContext),e._rollbarWrappedError=null),t.uncaughtError.apply(t,r),n&&n.apply(e,r)}function i(t){var r=n;return o(function(){if(this.notifier)return this.notifier[t].apply(this.notifier,arguments);var n=this,i="scope"===t;i&&(n=new r(this));var s=Array.prototype.slice.call(arguments,0),o={shim:n,method:t,args:s,ts:new Date};return e._rollbarShimQueue.push(o),i?n:void 0})}function s(e,t){if(t.hasOwnProperty&&t.hasOwnProperty("addEventListener")){var n=t.addEventListener;t.addEventListener=function(t,r,i){n.call(this,t,e.wrap(r),i)};var r=t.removeEventListener;t.removeEventListener=function(e,t,n){r.call(this,e,t&&t._wrapped?t._wrapped:t,n)}}}function o(e,t){return t=t||this.logger,function(){try{return e.apply(this,arguments)}catch(n){t("Rollbar internal error:",n)}}}var u=0;n.init=function(e,t){var i=t.globalAlias||"Rollbar";if("object"==typeof e[i])return e[i];e._rollbarShimQueue=[],e._rollbarWrappedError=null,t=t||{};var u=new n;return o(function(){if(u.configure(t),t.captureUncaught){var n=e.onerror;e.onerror=function(){var e=Array.prototype.slice.call(arguments,0);r(u,n,e)};var o,a,f="EventTarget,Window,Node,ApplicationCache,AudioTrackList,ChannelMergerNode,CryptoOperation,EventSource,FileReader,HTMLUnknownElement,IDBDatabase,IDBRequest,IDBTransaction,KeyOperation,MediaController,MessagePort,ModalWindow,Notification,SVGElementInstance,Screen,TextTrack,TextTrackCue,TextTrackList,WebSocket,WebSocketWorker,Worker,XMLHttpRequest,XMLHttpRequestEventTarget,XMLHttpRequestUpload".split(",");for(o=0;o<f.length;++o)a=f[o],e[a]&&e[a].prototype&&s(u,e[a].prototype)}return e[i]=u,u},u.logger)()},n.prototype.loadFull=function(e,t,n,r,i){var s=o(function(){var e=t.createElement("script"),i=t.getElementsByTagName("script")[0];e.src=r.rollbarJsUrl,e.async=!n,e.onload=u,i.parentNode.insertBefore(e,i)},this.logger),u=o(function(){var t;if(void 0===e._rollbarPayloadQueue){var n,r,s,o;for(t=new Error("rollbar.js did not load");n=e._rollbarShimQueue.shift();)for(s=n.args,o=0;o<s.length;++o)if(r=s[o],"function"==typeof r){r(t);break}}"function"==typeof i&&i(t)},this.logger);o(function(){n?s():e.addEventListener?e.addEventListener("load",s,!1):e.attachEvent("onload",s)},this.logger)()},n.prototype.wrap=function(t,n){try{var r;if(r="function"==typeof n?n:function(){return n||{}},"function"!=typeof t)return t;if(t._isWrap)return t;if(!t._wrapped){t._wrapped=function(){try{return t.apply(this,arguments)}catch(n){throw n._rollbarContext=r(),n._rollbarContext._wrappedSource=t.toString(),e._rollbarWrappedError=n,n}},t._wrapped._isWrap=!0;for(var i in t)t.hasOwnProperty(i)&&(t._wrapped[i]=t[i])}return t._wrapped}catch(s){return t}};for(var a="log,debug,info,warn,warning,error,critical,global,configure,scope,uncaughtError".split(","),f=0;f<a.length;++f)n.prototype[a[f]]=i(a[f]);var l="//d37gvrvc0wt4s1.cloudfront.net/js/v1.1/rollbar.min.js";_rollbarConfig.rollbarJsUrl=_rollbarConfig.rollbarJsUrl||l;var c=n.init(e,_rollbarConfig);c.loadFull(e,t,!1,_rollbarConfig)}(window,document)</script>
-
-    <script type="text/ng-template" id="header.html" src="header.html"></script>
-
+    <!-- Rollbar -->
 
 </head>
-<body ng-app="indexPage" ng-controller="IndexPageController">
+<body ng-app="loginPage" ng-controller="LoginPageController">
 
-    <div ng-include="'header.html'"></div>
+<form name="loginForm" ng-submit="loginFormCtrl.submitCreds()" class="form-signin" role="form" ng-controller="LoginFormController as loginFormCtrl" novalidate>
+
+    <h2 class="form-signin-heading">Please sign in</h2>
+
+    <input type="text"
+           class="form-control ng-pristine ng-invalid"
+           placeholder="Username"
+           ng-model="loginFormCtrl.user.username"
+           name="username"
+           required
+           autofocus="">
+
+    <div class="help-hint"><span class="help" ng-show="loginForm.username.$error.required">*Required</span></div>
+
+    <input type="password"
+           class="form-control ng-pristine ng-invalid"
+           placeholder="Password"
+           ng-model="loginFormCtrl.user.password"
+           name="password"
+           required>
+
+    <div class="help-hint password-hint">
+        <span class="help" ng-show="loginForm.password.$error.required">*Required</span>
+        <span class="help" ng-show="loginFormCtrl.badCredentials">Username or password in incorrect.</span>
+    </div>
+
+    <input id="redirectHash" type="hidden" class="form-control" placeholder="User name" name="redirectHash">
+
+    <input type="submit"
+            value="Sign in"
+            ng-disabled="loginForm.$invalid"
+            class="btn btn-lg btn-primary btn-block">
 
 
-    <div>Main content area</div>
+</form>
 
 
-    <!-- ANGULAR JS-->
-    <script src="assets/scripts/angular/angular.min.js"></script>
+<!-- ANGULAR JS-->
+<script src="assets/scripts/angular/angular.min.js"></script>
 
-    <!-- APP JS -->
-    <script src="assets/scripts/index.js"></script>
 
+
+<!-- APP JS -->
+<script src="assets/scripts/login.js"></script>
 
 </body>
 </html>
