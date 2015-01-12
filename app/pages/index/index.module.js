@@ -1,6 +1,6 @@
 
 
-var app = angular.module('indexPage',  ['App.Auth', 'App.Settings']);
+var app = angular.module('indexPage',  ['App.Auth', 'App.Settings', 'App.Header']);
 
 app.controller('IndexPageController', ['$scope', '$http', '$q','AuthUtils', 'settings', function($scope, $http, $q,
                                                                                         AuthUtils, settings){

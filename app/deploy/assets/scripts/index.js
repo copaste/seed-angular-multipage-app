@@ -1,7 +1,7 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 
 
-var app = angular.module('indexPage',  ['App.Auth', 'App.Settings']);
+var app = angular.module('indexPage',  ['App.Auth', 'App.Settings', 'App.Header']);
 
 app.controller('IndexPageController', ['$scope', '$http', '$q','AuthUtils', 'settings', function($scope, $http, $q,
                                                                                         AuthUtils, settings){
@@ -79,10 +79,13 @@ var getGoNoGoResults  = function($q, $http, settings){
 require('../../shared/app-config.js');
 require('../../shared/modules/auth.module.js');
 require('../../shared/modules/settings.module.js');
+require('../../shared/templates.js');
+require('../../shared/modules/header.module.js');
 require('./index.module.js');
 
 
-},{"../../shared/app-config.js":3,"../../shared/modules/auth.module.js":4,"../../shared/modules/settings.module.js":5,"./index.module.js":1}],3:[function(require,module,exports){
+
+},{"../../shared/app-config.js":3,"../../shared/modules/auth.module.js":4,"../../shared/modules/header.module.js":5,"../../shared/modules/settings.module.js":6,"../../shared/templates.js":7,"./index.module.js":1}],3:[function(require,module,exports){
  _APP_CONFIG = {
 
     "apiHost": "http://localhost:3333/",
@@ -96,7 +99,7 @@ require('./index.module.js');
      "homePage": "index.html"
 
 };
- 
+
 },{}],4:[function(require,module,exports){
 /**
  * Created by rgwozdz on 12/3/14.
@@ -281,6 +284,17 @@ auth.controller('LogoutController', ['$scope', 'AuthUtils',function($scope, Auth
 }]);
 
 },{}],5:[function(require,module,exports){
+appHeader = angular.module('App.Header',  ['templates-main']);
+
+appHeader.directive('appHeader', function() {
+    return {
+        templateUrl: '../app/deploy/header.html'
+    };
+});
+
+
+
+},{}],6:[function(require,module,exports){
 /**
  * Created by rgwozdz on 12/8/14.
  */
@@ -298,7 +312,27 @@ var applicationSettings = angular.module('App.Settings',  []);
 applicationSettings.constant('settings', settings);
 
 
+},{}],7:[function(require,module,exports){
+angular.module('templates-main', ['../app/deploy/header.html']);
+
+angular.module("../app/deploy/header.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("../app/deploy/header.html",
+    "<div>\n" +
+    "    <div class=\"navbar-header\">\n" +
+    "        <p class=\"navbar-brand header-brand\">Spatial Dev</p>\n" +
+    "    </div>\n" +
+    "    <div id=\"navbar\" class=\"navbar-collapse collapse\">\n" +
+    "        <ul class=\"nav navbar-nav\">\n" +
+    "            <!--<li class=\"active\"><a href=\"home.html\">Home</a></li>-->\n" +
+    "        </ul>\n" +
+    "        <ul class=\"nav navbar-nav navbar-right\">\n" +
+    "            <li><a ng-controller=\"LogoutController as logoutCtrl\" class=\"logout\" ng-click=\"logoutCtrl.logout()\">Logout</a></li>\n" +
+    "        </ul>\n" +
+    "    </div>\n" +
+    "</div>");
+}]);
+
 },{}]},{},[2])
 
 
-//# sourceMappingURL=index.js.map?1420959596
+//# sourceMappingURL=index.js.map?1421053396

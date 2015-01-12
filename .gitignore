@@ -7,7 +7,5 @@
 
 **.DS_Store
 
-server/node_modules/
-browser/node_modules/
-pem/
+node_modules/
 

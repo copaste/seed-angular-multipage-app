@@ -201,9 +201,17 @@ module.exports = function(grunt) {
                     to: function(){return '"apiHost": "' + config.environment[env].apiHost + '/"'}
                 }]
             }
+        },
+
+        html2js: {
+            options: {
+                // custom options, see below
+            },
+            main: {
+                src: ['app/deploy/header.html'],
+                dest: 'app/shared/templates.js'
+            }
         }
-
-
     });
 
     // Tell Grunt we plan to use these plug-ins.
@@ -214,6 +222,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-text-replace');
     grunt.loadNpmTasks('grunt-scp');
     grunt.loadNpmTasks('grunt-shell');
+    grunt.loadNpmTasks('grunt-html2js');
 
     grunt.registerTask('build', [
         'clean:build',
