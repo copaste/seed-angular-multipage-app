@@ -1,8 +1,72 @@
+var path = require('path');
 var config = require('./deploy-config.json');
 var rollbar = require('./rollbar');
 
 function dateStamp(){
     return new Date().getTime();
+}
+
+function cssSourceMapReplace(cssFilePath){
+
+
+    var cssFilename = path.basename(cssFilePath);
+
+    return {
+        src: [cssFilePath,'build/deploy/assets/styles/login.css'],
+        overwrite: true,
+        replacements: [{
+            from: 'sourceMappingURL='+ cssFilePath + '.map',
+            to: 'sourceMappingURL=' + cssFilename + '.map'
+        }]
+    }
+}
+
+function appPageReplace(srcPath, appJsFilePath, appCssFilePath){
+    return {
+        src: [srcPath],
+        overwrite: true,
+        replacements: [
+            {
+                from: 'src="'+ appJsFilePath +'"',
+                to: function(){return 'src="' + appJsFilePath + '?' + dateStamp() +'"'}
+            },
+            {
+                from: 'href="'+ appCssFilePath +'"',
+                to: function(){return 'href="'+ appCssFilePath +'?' + dateStamp() +'"'}
+            },
+            {
+                from: '<!-- Rollbar -->',
+                to: function(){return rollbar(config.rollbarKey);}
+            }
+        ]
+    }
+}
+
+function appPageBrowserify(requireFilePath, resultFilePath, sourceMapFilePath){
+
+    return 'browserify ' + requireFilePath + ' --debug | exorcist ' + sourceMapFilePath + ' > ' + resultFilePath
+        + ' && echo "?"`date +%s` >> ' + resultFilePath;
+
+}
+
+function appPageLessCompile(lessFilePath, cssFileDestPath, sourceMapFilePath) {
+
+    var lessDir = path.dirname(lessFilePath) + '/';
+    var lessFile = path.basename(lessFilePath);
+    return {
+        expand: true, // set to true to enable options following options:
+        cwd: lessDir, // all sources relative to this path
+        src: lessFile, // source folder patterns to match, relative to cwd
+        dest: cssFileDestPath, // destination folder path prefix
+        ext: ".css", // replace any existing extension with this value in dest folder
+        options: {
+            relativeUrls: false,
+            compress: true,
+            sourceMap: true,
+            sourceMapFilename: sourceMapFilePath
+
+        }
+    };
 }
 
 module.exports = function(grunt) {
@@ -15,10 +79,8 @@ module.exports = function(grunt) {
         var hostUser = config.environment[env].hostUsername;
         var pem = config.environment[env].pemFilePath;
 
-        console.log('scp -i ' + pem + ' ship/build.tar.gz '+ hostUser + '@' + hostIp + ':'+ hostPath);
     }
 
-    console.log(config);
 
     // 1. All configuration goes here
     grunt.initConfig({
@@ -40,8 +102,8 @@ module.exports = function(grunt) {
                 tasks: [
                     'less:indexStyles',
                     'less:loginStyles',
-                    'replace:loginCSS',
-                    'replace:indexCSS',
+                    'replace:localLoginCSS',
+                    'replace:localIndexCSS',
                     'replace:loginHTML',
                     'replace:indexHTML',
                     'shell:multiBrowserify'
@@ -52,40 +114,12 @@ module.exports = function(grunt) {
         less: {
 
             // Index page custom styles
-            indexStyles: {
-                expand: true, // set to true to enable options following options:
-                cwd: "app/pages/index/less/", // all sources relative to this path
-                src: "index.less", // source folder patterns to match, relative to cwd
-                dest: "app/deploy/assets/styles", // destination folder path prefix
-                ext: ".css", // replace any existing extension with this value in dest folder
-                options: {
-                    relativeUrls: false,
-                    compress: true,
-                    // LESS source maps
-                    // To enable, set sourceMap to true and update sourceMapRootpath based on your install
-                    sourceMap: true,
-                    sourceMapFilename: "app/deploy/assets/styles/index.css.map",
-
-                }
-            },
+            indexStyles: appPageLessCompile('app/pages/index/less/index.less', 'app/deploy/assets/styles',
+                'app/deploy/assets/styles/index.css.map'),
 
             // Index page custom styles
-            loginStyles: {
-                expand: true, // set to true to enable options following options:
-                cwd: "app/pages/login/less/", // all sources relative to this path
-                src: "login.less", // source folder patterns to match, relative to cwd
-                dest: "app/deploy/assets/styles", // destination folder path prefix
-                ext: ".css", // replace any existing extension with this value in dest folder
-                options: {
-                    relativeUrls: false,
-                    compress: true,
-                    // LESS source maps
-                    // To enable, set sourceMap to true and update sourceMapRootpath based on your install
-                    sourceMap: true,
-                    sourceMapFilename: "app/deploy/assets/styles/login.css.map"
-
-                }
-            }
+            loginStyles: appPageLessCompile('app/pages/login/less/index.less', 'app/deploy/assets/styles',
+                'app/deploy/assets/styles/login.css.map')
         },
 
         // Grunt execution of some Bash stuff;
@@ -96,23 +130,20 @@ module.exports = function(grunt) {
             // Add cache busting querying string to source mapping URL
             multiBrowserify: {
                 command: [
-                    'browserify app/pages/index/index.require.js --debug | exorcist app/deploy/assets/scripts/index.js.map > app/deploy/assets/scripts/index.js',
-                    'echo "?"`date +%s` >>  app/deploy/assets/scripts/index.js',
-
-                    'browserify app/pages/login/login.require.js --debug | exorcist app/deploy/assets/scripts/login.js.map > app/deploy/assets/scripts/login.js',
-                    'echo "?"`date +%s` >>  app/deploy/assets/scripts/login.js',
-
+                    appPageBrowserify('app/pages/index/index.require.js', 'app/deploy/assets/scripts/index.js',
+                        'app/deploy/assets/scripts/index.js.map'),
+                    appPageBrowserify('app/pages/login/login.require.js', 'app/deploy/assets/scripts/login.js',
+                        'app/deploy/assets/scripts/login.js.map')
 
                 ].join('&&')
             },
 
             multiBrowserifyBuild: {
                 command: [
-                    'browserify build/pages/index/index.require.js --debug | exorcist build/deploy/assets/scripts/index.js.map > build/deploy/assets/scripts/index.js',
-                    'echo "?"`date +%s` >>  build/deploy/assets/scripts/index.js',
-
-                    'browserify build/pages/login/login.require.js --debug | exorcist build/deploy/assets/scripts/login.js.map > build/deploy/assets/scripts/login.js',
-                    'echo "?"`date +%s` >>  build/deploy/assets/scripts/login.js',
+                    appPageBrowserify('build/pages/index/index.require.js', 'build/deploy/assets/scripts/index.js',
+                        'build/deploy/assets/scripts/index.js.map'),
+                    appPageBrowserify('build/pages/login/login.require.js', 'build/deploy/assets/scripts/login.js',
+                        'build/deploy/assets/scripts/login.js.map')
                 ].join('&&')
             },
 
@@ -140,74 +171,25 @@ module.exports = function(grunt) {
         },
 
         replace: {
-            loginHTML : {
-                src: ['build/deploy/login.html'],
-                overwrite: true,
-                replacements: [
-                    {
-                        from: 'src="assets/scripts/login.js"',
-                        to: function(){return 'src="assets/scripts/login.js?' + dateStamp() +'"'}
-                    },
-                    {
-                    from: 'href="/assets/styles/login.css"',
-                    to: function(){return 'href="assets/styles/login.css?' + dateStamp() +'"'}
-                    },
-                    {
-                        from: '<!-- Rollbar -->',
-                        to: function(){return rollbar(config.rollbarKey);}
-                    }]
-            },
+            loginHTML : appPageReplace('build/deploy/login.html', 'assets/scripts/login.js', 'assets/styles/login.css'),
 
-            indexHTML : {
-                src: ['build/deploy/index.html'],
-                overwrite: true,
-                replacements: [
-                    {
-                        from: 'src="assets/scripts/index.js"',
-                        to: function(){return 'src="assets/scripts/index.js?' + dateStamp() +'"'}
-                    },
-                    {
-                        from: 'href="assets/styles/index.css"',
-                        to: function(){return 'href="assets/styles/index.css?' + dateStamp() +'"'}
-                    },
-                    {
-                        from: '<!-- Rollbar -->',
-                        to: function(){return rollbar(config.rollbarKey);}
-                    }]
-            },
+            indexHTML : appPageReplace('build/deploy/index.html', 'assets/scripts/index.js', 'assets/styles/index.css'),
 
-            loginCSS: {
-                src: ['app/deploy/assets/styles/login.css','build/deploy/assets/styles/login.css'],
-                overwrite: true,
-                replacements: [{
-                    from: 'sourceMappingURL=app/deploy/assets/styles/login.css.map',
-                    to: 'sourceMappingURL=login.css.map'
-                }]
-            },
-            indexCSS: {
-                src: ['app/deploy/assets/styles/index.css','build/deploy/assets/styles/index.css'],
-                overwrite: true,
-                replacements: [{
-                    from: 'sourceMappingURL=app/deploy/assets/styles/index.css.map',
-                    to: 'sourceMappingURL=index.css.map'
-                }]
-            },
+            localLoginCSS:  cssSourceMapReplace('app/deploy/assets/styles/login.css'),
 
-            settings: {
-                src: ['build/shared/modules/settings.module.js'],
-                overwrite: true,
-                replacements: [{
-                    from: '"apiHost": "http://localhost:3333/"',
-                    to: function(){return '"apiHost": "' + config.environment[env].apiHost + '/"'}
-                }]
-            }
+            buildLoginCSS: cssSourceMapReplace('build/deploy/assets/styles/login.css'),
+
+            localIndexCSS : cssSourceMapReplace('app/deploy/assets/styles/index.css'),
+
+            buildIndexCSS: cssSourceMapReplace('build/deploy/assets/styles/index.css'),
+
         },
 
         html2js: {
             options: {
                 // custom options, see below
             },
-            main: {
+            index: {
                 src: ['app/deploy/header.html'],
                 dest: 'app/shared/templates.js'
             }
@@ -227,16 +209,13 @@ module.exports = function(grunt) {
     grunt.registerTask('build', [
         'clean:build',
         'copy:build',
-        'replace:loginHTML', 'replace:indexHTML', 'replace:loginCSS', 'replace:indexCSS','replace:settings',
+        'replace:loginHTML', 'replace:indexHTML', 'replace:buildLoginCSS', 'replace:buildIndexCSS',
         'shell:multiBrowserifyBuild'
     ]);
 
     // The build and 'deploy' task
     grunt.registerTask('build-push', [
-        'clean:build',
-        'copy:build',
-        'replace:loginHTML', 'replace:indexHTML', 'replace:loginCSS', 'replace:indexCSS','replace:settings',
-        'shell:multiBrowserifyBuild',
+        'build',
         'shell:compress', 'shell:scp'
     ]);
 
