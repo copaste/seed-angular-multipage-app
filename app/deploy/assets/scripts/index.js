@@ -284,7 +284,7 @@ auth.controller('LogoutController', ['$scope', 'AuthUtils',function($scope, Auth
 }]);
 
 },{}],5:[function(require,module,exports){
-appHeader = angular.module('App.Header',  ['templates-main']);
+appHeader = angular.module('App.Header',  ['templates-header']);
 
 appHeader.directive('appHeader', function() {
     return {
@@ -313,13 +313,13 @@ applicationSettings.constant('settings', settings);
 
 
 },{}],7:[function(require,module,exports){
-angular.module('templates-main', ['../app/deploy/header.html']);
+angular.module('templates-header', ['../app/deploy/header.html']);
 
 angular.module("../app/deploy/header.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("../app/deploy/header.html",
     "<div>\n" +
     "    <div class=\"navbar-header\">\n" +
-    "        <p class=\"navbar-brand header-brand\">Spatial Dev</p>\n" +
+    "        <p class=\"navbar-brand header-brand\">Application Header!!!</p>\n" +
     "    </div>\n" +
     "    <div id=\"navbar\" class=\"navbar-collapse collapse\">\n" +
     "        <ul class=\"nav navbar-nav\">\n" +
@@ -335,4 +335,4 @@ angular.module("../app/deploy/header.html", []).run(["$templateCache", function(
 },{}]},{},[2])
 
 
-//# sourceMappingURL=index.js.map?1421094213
+//# sourceMappingURL=index.js.map?1422395244

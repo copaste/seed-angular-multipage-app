@@ -81,13 +81,10 @@ module.exports = function(grunt) {
 
     }
 
-
     // 1. All configuration goes here
     grunt.initConfig({
 
-
         pkg: grunt.file.readJSON('package.json'),
-
 
         // File watching task
         watch: {
@@ -97,7 +94,7 @@ module.exports = function(grunt) {
                     spawn: false
                 },
                 // Files to watch for changes
-                files: ['app/**', '!app/deploy/**'],
+                files: ['app/**', '!app/deploy/assets/**'],
 
                 tasks: [
                     'less:indexStyles',
@@ -106,6 +103,7 @@ module.exports = function(grunt) {
                     'replace:localIndexCSS',
                     'replace:loginHTML',
                     'replace:indexHTML',
+                    'html2js:header',
                     'shell:multiBrowserify'
                     ]
             }
@@ -125,8 +123,7 @@ module.exports = function(grunt) {
         // Grunt execution of some Bash stuff;
         shell: {
 
-            // Browserify script resources;
-            // Make source maps separate files (exorcist);
+            // Browserify script resources; source maps as separate files (exorcist);
             // Add cache busting querying string to source mapping URL
             multiBrowserify: {
                 command: [
@@ -189,7 +186,7 @@ module.exports = function(grunt) {
             options: {
                 // custom options, see below
             },
-            index: {
+            header: {
                 src: ['app/deploy/header.html'],
                 dest: 'app/shared/templates.js'
             }

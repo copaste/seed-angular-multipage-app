@@ -1,4 +1,4 @@
-appHeader = angular.module('App.Header',  ['templates-main']);
+appHeader = angular.module('App.Header',  ['templates-header']);
 
 appHeader.directive('appHeader', function() {
     return {
