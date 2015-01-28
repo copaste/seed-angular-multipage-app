@@ -46,34 +46,7 @@ app.controller('SuitesDashboardController', ['$scope', '$http', '$q', 'settings'
 }]);
 
 
-var getGoNoGoResults  = function($q, $http, settings){
 
-
-    var deferred = $q.defer();
-
-    var responsePromise = $http.get(settings.apiRoutes.goNoGo);
-
-    responsePromise.success(function(res, status, headers, config) {
-
-        // if the token is valid, response will contain {authenticated: true}
-        if(res.hasOwnProperty('suites')){
-
-            deferred.resolve(res.suites);
-
-        } else {
-
-            deferred.reject(false);
-        }
-
-    });
-
-    responsePromise.error(function(res, status, headers, config) {
-        deferred.reject(false);
-    });
-
-    return deferred.promise;
-
-};
 
 },{}],2:[function(require,module,exports){
 require('../../shared/app-config.js');
@@ -311,7 +284,6 @@ var applicationSettings = angular.module('App.Settings',  []);
 
 applicationSettings.constant('settings', settings);
 
-
 },{}],7:[function(require,module,exports){
 angular.module('templates-header', ['../app/deploy/header.html']);
 
@@ -335,4 +307,4 @@ angular.module("../app/deploy/header.html", []).run(["$templateCache", function(
 },{}]},{},[2])
 
 
-//# sourceMappingURL=index.js.map?1422395244
+//# sourceMappingURL=index.js.map?index1422429723

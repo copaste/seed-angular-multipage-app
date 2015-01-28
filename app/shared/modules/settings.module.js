@@ -13,4 +13,3 @@ for (var key in settings.apiRoutes) {
 var applicationSettings = angular.module('App.Settings',  []);
 
 applicationSettings.constant('settings', settings);
-

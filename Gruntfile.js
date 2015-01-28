@@ -8,11 +8,10 @@ function dateStamp(){
 
 function cssSourceMapReplace(cssFilePath){
 
-
     var cssFilename = path.basename(cssFilePath);
 
     return {
-        src: [cssFilePath,'build/deploy/assets/styles/login.css'],
+        src: [cssFilePath],
         overwrite: true,
         replacements: [{
             from: 'sourceMappingURL='+ cssFilePath + '.map',
@@ -42,10 +41,10 @@ function appPageReplace(srcPath, appJsFilePath, appCssFilePath){
     }
 }
 
-function appPageBrowserify(requireFilePath, resultFilePath, sourceMapFilePath){
+function appPageBrowserify(requireFilePath, resultFilePath, sourceMapFilePath, id){
 
     return 'browserify ' + requireFilePath + ' --debug | exorcist ' + sourceMapFilePath + ' > ' + resultFilePath
-        + ' && echo "?"`date +%s` >> ' + resultFilePath;
+        + ' && echo "?"' + id + '`date +%s` >> ' + resultFilePath;
 
 }
 
@@ -101,8 +100,8 @@ module.exports = function(grunt) {
                     'less:loginStyles',
                     'replace:localLoginCSS',
                     'replace:localIndexCSS',
-                    'replace:loginHTML',
-                    'replace:indexHTML',
+                    'replace:localLoginHTML',
+                    'replace:localIndexHTML',
                     'html2js:header',
                     'shell:multiBrowserify'
                     ]
@@ -128,9 +127,9 @@ module.exports = function(grunt) {
             multiBrowserify: {
                 command: [
                     appPageBrowserify('app/pages/index/index.require.js', 'app/deploy/assets/scripts/index.js',
-                        'app/deploy/assets/scripts/index.js.map'),
+                        'app/deploy/assets/scripts/index.js.map', 'index'),
                     appPageBrowserify('app/pages/login/login.require.js', 'app/deploy/assets/scripts/login.js',
-                        'app/deploy/assets/scripts/login.js.map')
+                        'app/deploy/assets/scripts/login.js.map', 'login')
 
                 ].join('&&')
             },
@@ -138,9 +137,9 @@ module.exports = function(grunt) {
             multiBrowserifyBuild: {
                 command: [
                     appPageBrowserify('build/pages/index/index.require.js', 'build/deploy/assets/scripts/index.js',
-                        'build/deploy/assets/scripts/index.js.map'),
+                        'build/deploy/assets/scripts/index.js.map', 'index'),
                     appPageBrowserify('build/pages/login/login.require.js', 'build/deploy/assets/scripts/login.js',
-                        'build/deploy/assets/scripts/login.js.map')
+                        'build/deploy/assets/scripts/login.js.map', 'login')
                 ].join('&&')
             },
 
@@ -168,9 +167,13 @@ module.exports = function(grunt) {
         },
 
         replace: {
-            loginHTML : appPageReplace('build/deploy/login.html', 'assets/scripts/login.js', 'assets/styles/login.css'),
+            localLoginHTML : appPageReplace('app/deploy/login.html', 'assets/scripts/login.js', 'assets/styles/login.css'),
 
-            indexHTML : appPageReplace('build/deploy/index.html', 'assets/scripts/index.js', 'assets/styles/index.css'),
+            localIndexHTML : appPageReplace('app/deploy/index.html', 'assets/scripts/index.js', 'assets/styles/index.css'),
+
+            buildLoginHTML : appPageReplace('build/deploy/login.html', 'assets/scripts/login.js', 'assets/styles/login.css'),
+
+            buildIndexHTML : appPageReplace('build/deploy/index.html', 'assets/scripts/index.js', 'assets/styles/index.css'),
 
             localLoginCSS:  cssSourceMapReplace('app/deploy/assets/styles/login.css'),
 
@@ -188,7 +191,7 @@ module.exports = function(grunt) {
             },
             header: {
                 src: ['app/deploy/header.html'],
-                dest: 'app/shared/templates.js'
+                dest: 'app/shared/templates-header.js'
             }
         }
     });
@@ -206,7 +209,7 @@ module.exports = function(grunt) {
     grunt.registerTask('build', [
         'clean:build',
         'copy:build',
-        'replace:loginHTML', 'replace:indexHTML', 'replace:buildLoginCSS', 'replace:buildIndexCSS',
+        'replace:buildLoginHTML', 'replace:builIndexHTML', 'replace:buildLoginCSS', 'replace:buildIndexCSS',
         'shell:multiBrowserifyBuild'
     ]);
 

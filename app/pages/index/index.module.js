@@ -45,31 +45,4 @@ app.controller('SuitesDashboardController', ['$scope', '$http', '$q', 'settings'
 }]);
 
 
-var getGoNoGoResults  = function($q, $http, settings){
 
-
-    var deferred = $q.defer();
-
-    var responsePromise = $http.get(settings.apiRoutes.goNoGo);
-
-    responsePromise.success(function(res, status, headers, config) {
-
-        // if the token is valid, response will contain {authenticated: true}
-        if(res.hasOwnProperty('suites')){
-
-            deferred.resolve(res.suites);
-
-        } else {
-
-            deferred.reject(false);
-        }
-
-    });
-
-    responsePromise.error(function(res, status, headers, config) {
-        deferred.reject(false);
-    });
-
-    return deferred.promise;
-
-};

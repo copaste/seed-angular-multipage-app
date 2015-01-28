@@ -276,8 +276,7 @@ var applicationSettings = angular.module('App.Settings',  []);
 
 applicationSettings.constant('settings', settings);
 
-
 },{}]},{},[2])
 
 
-//# sourceMappingURL=login.js.map?1422395244
+//# sourceMappingURL=login.js.map?login1422429724
